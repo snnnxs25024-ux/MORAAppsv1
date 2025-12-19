@@ -1,0 +1,8 @@
+{
+  "name": "Mora Apps - Courier Management",
+  "description": "A comprehensive courier application featuring attendance tracking, barcode scanning for tracking numbers, and real-time delivery management.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
