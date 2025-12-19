@@ -30,7 +30,7 @@ const BottomNav: React.FC = () => {
     },
     { 
       icon: <Fingerprint />, 
-      label: 'Presensi', 
+      label: 'Absensi', 
       path: '/attendance'
     },
     { 
