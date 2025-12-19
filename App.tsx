@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import BottomNav from './components/BottomNav';
@@ -47,6 +46,10 @@ const App: React.FC = () => {
 
   const handleAddPackage = (newPkg: Package) => {
     setPackages(prev => [newPkg, ...prev]);
+  };
+
+  const handleRemovePackage = (id: string) => {
+    setPackages(prev => prev.filter(p => p.id !== id));
   };
 
   const handleFinishLoading = () => {
@@ -99,6 +102,7 @@ const App: React.FC = () => {
               <DeliveryList 
                 packages={packages} 
                 onUpdate={handleUpdateStatus} 
+                onRemove={handleRemovePackage}
                 appState={appState}
                 onSetupTotal={handleSetupTotal}
                 onFinishLoading={handleFinishLoading}
@@ -111,8 +115,10 @@ const App: React.FC = () => {
             <Route path="/scan" element={
               <Scanner 
                 onScan={handleAddPackage} 
+                onRemove={handleRemovePackage}
                 mode={appState.currentStep === 'LOADING_SCAN' ? 'LOAD' : 'FIND'} 
                 existingPackages={packages}
+                appState={appState}
               />
             } />
             <Route path="/attendance" element={<Attendance isClockedIn={appState.isClockedIn} onClockIn={handleClockIn} />} />

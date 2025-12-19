@@ -1,4 +1,3 @@
-
 export enum DeliveryStatus {
   PENDING = 'Pending',
   PICKED_UP = 'Picked Up',
@@ -15,6 +14,7 @@ export interface Package {
   address: string;
   status: DeliveryStatus;
   timestamp: string;
+  deliveryTime?: string;
   recipientName?: string;
   proofImage?: string;
   isCod: boolean;
