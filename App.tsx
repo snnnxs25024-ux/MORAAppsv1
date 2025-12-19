@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import BottomNav from './components/BottomNav';
@@ -7,10 +8,12 @@ import Attendance from './components/Attendance';
 import Profile from './components/Profile';
 import DeliveryList from './components/DeliveryList';
 import Performance from './components/Performance';
-import { Package, DeliveryStatus, UserProfile, AppState } from './types';
+import Login from './components/Login';
+import { Package, DeliveryStatus, UserProfile, AppState, AttendanceData } from './types';
 
 const App: React.FC = () => {
   const [packages, setPackages] = useState<Package[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [appState, setAppState] = useState<AppState>({
     isClockedIn: false,
     isShiftStarted: false,
@@ -31,8 +34,21 @@ const App: React.FC = () => {
     balance: 750000
   });
 
-  const handleClockIn = () => {
-    setAppState(prev => ({ ...prev, isClockedIn: true, currentStep: 'SETUP_TOTAL' }));
+  const handleLogin = (id: string, pass: string) => {
+    if (id === 'mora' && pass === '1234') {
+      setIsAuthenticated(true);
+      return true;
+    }
+    return false;
+  };
+
+  const handleClockIn = (data: AttendanceData) => {
+    setAppState(prev => ({ 
+      ...prev, 
+      isClockedIn: true, 
+      currentStep: 'SETUP_TOTAL',
+      attendanceIn: data
+    }));
   };
 
   const handleSetupTotal = (cod: number, nonCod: number) => {
@@ -86,6 +102,10 @@ const App: React.FC = () => {
     });
   };
 
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
     <Router>
       <div className="flex flex-col h-screen bg-slate-50 overflow-hidden font-sans">
@@ -121,7 +141,7 @@ const App: React.FC = () => {
                 appState={appState}
               />
             } />
-            <Route path="/attendance" element={<Attendance isClockedIn={appState.isClockedIn} onClockIn={handleClockIn} />} />
+            <Route path="/attendance" element={<Attendance appState={appState} onClockIn={handleClockIn} />} />
             <Route path="/profile" element={<Profile user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

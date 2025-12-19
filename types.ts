@@ -1,9 +1,10 @@
+
 export enum DeliveryStatus {
   PENDING = 'Pending',
   PICKED_UP = 'Picked Up',
   ON_DELIVERY = 'On Delivery',
   DELIVERED = 'Terkirim',
-  CANCELLED = 'Dibatalkan' // Ini status sementara saat kurir klik cancel
+  CANCELLED = 'Dibatalkan'
 }
 
 export interface Package {
@@ -34,6 +35,12 @@ export interface UserProfile {
   balance: number;
 }
 
+export interface AttendanceData {
+  time: string;
+  location: string;
+  photo: string;
+}
+
 export interface AppState {
   isClockedIn: boolean;
   isShiftStarted: boolean;
@@ -42,4 +49,5 @@ export interface AppState {
   expectedNonCod: number;
   handoverPhoto?: string;
   handoverLeader?: string;
+  attendanceIn?: AttendanceData;
 }

@@ -7,11 +7,13 @@ import {
   Timer, 
   CheckCircle2, 
   CalendarDays, 
-  ChevronRight,
-  Fingerprint,
-  Calendar
+  ChevronRight, 
+  Fingerprint, 
+  Calendar 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+// Import types needed for the component props from types.ts
+import { AppState, AttendanceData } from '../types';
 
 interface AttendanceRecord {
   date: string;
@@ -22,11 +24,13 @@ interface AttendanceRecord {
 }
 
 interface Props {
-  isClockedIn: boolean;
-  onClockIn: () => void;
+  // Fix: Use appState instead of isClockedIn to match what is passed from App.tsx
+  appState: AppState;
+  // Fix: onClockIn expects AttendanceData argument as defined in handleClockIn in App.tsx
+  onClockIn: (data: AttendanceData) => void;
 }
 
-const Attendance: React.FC<Props> = ({ isClockedIn, onClockIn }) => {
+const Attendance: React.FC<Props> = ({ appState, onClockIn }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [location, setLocation] = useState<string>("Melacak Lokasi...");
   const [activePeriod, setActivePeriod] = useState<1 | 2>(new Date().getDate() <= 15 ? 1 : 2);
@@ -53,7 +57,13 @@ const Attendance: React.FC<Props> = ({ isClockedIn, onClockIn }) => {
   }, []);
 
   const handleClockPress = () => {
-    onClockIn();
+    // Fix: Construct AttendanceData object to satisfy the handleClockIn parameter requirement
+    const data: AttendanceData = {
+      time: currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      location: location,
+      photo: 'https://i.imgur.com/8Km9tLL.png'
+    };
+    onClockIn(data);
     setTimeout(() => navigate('/'), 1200);
   };
 
@@ -90,7 +100,8 @@ const Attendance: React.FC<Props> = ({ isClockedIn, onClockIn }) => {
           <MapPin size={12} /> {location}
         </div>
 
-        {isClockedIn ? (
+        {/* Fix: Access isClockedIn from appState */}
+        {appState.isClockedIn ? (
           <div className="w-full bg-emerald-50 text-emerald-600 p-6 rounded-2xl border border-emerald-100 animate-in zoom-in-95">
              <div className="bg-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
                 <CheckCircle2 size={24} />
